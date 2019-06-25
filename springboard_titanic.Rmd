@@ -1,0 +1,62 @@
+---
+title: "Springboard Titanic Data Wrangling"
+output: html_notebook
+---
+
+Load Packages & Import Data
+
+```{r}
+library("tidyverse")
+
+titanic_data <- read.csv("titanic_original.csv", stringsAsFactors = FALSE)
+
+```
+
+Preview the Data
+
+```{r}
+titanic_data
+
+```
+
+Port of Embarkation: Missing values correspond to passengers who embarked from Southhampton.
+
+Replace the missing values with "S". 
+
+```{r}
+titanic_data <- titanic_data %>% 
+  mutate(embarked = if_else(embarked == "", "S" , embarked))
+
+```
+
+Age: There are a lot of missing values in the age column. 
+
+Replace the missing values witht the mean age
+
+```{r}
+age_missing <- na.omit(titanic_data$age)
+
+mean_age <- round(mean(age_missing), digits = 0)
+
+titanic_data$age[is.na(titanic_data$age)] <- mean_age
+```
+
+Age: Consider other ways to populate the missing values. 
+
+Depending on the distributon, it may make more sense to us the medain. 
+
+Create histogram
+
+```{r}
+hist(titanic_data$age)
+```
+
+Since the distribtuion is skwed left, the medain should be used instead of the mean. This is beacuse the median is not effected by extreme values, therefore it is a better repersentation of the central tendency.
+
+Replace missing values with medain.
+
+```{r}
+median_age <- median(age_missing)
+
+```
+
