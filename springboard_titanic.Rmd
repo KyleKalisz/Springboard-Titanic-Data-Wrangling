@@ -15,11 +15,11 @@ titanic_data <- read.csv("titanic_original.csv", stringsAsFactors = FALSE)
 Preview the Data
 
 ```{r}
-titanic_data
+str(titanic_data)
 
 ```
 
-Port of Embarkation: Missing values correspond to passengers who embarked from Southhampton.
+1. Port of Embarkation: Missing values correspond to passengers who embarked from Southhampton.
 
 Replace the missing values with "S". 
 
@@ -29,7 +29,7 @@ titanic_data <- titanic_data %>%
 
 ```
 
-Age: There are a lot of missing values in the age column. 
+2. Age: There are a lot of missing values in the age column. 
 
 Replace the missing values witht the mean age
 
@@ -38,7 +38,7 @@ age_missing <- na.omit(titanic_data$age)
 
 mean_age <- round(mean(age_missing), digits = 0)
 
-titanic_data$age[is.na(titanic_data$age)] <- mean_age
+mean_age
 ```
 
 Age: Consider other ways to populate the missing values. 
@@ -58,5 +58,38 @@ Replace missing values with medain.
 ```{r}
 median_age <- median(age_missing)
 
+median_age
+
+titanic_data$age[is.na(titanic_data$age)] <- median_age
 ```
+
+3. Lifeboat: Many passengers did not make to a lifeboat. Fill empty slots with "NA"
+
+```{r}
+titanic_data$boat[titanic_data$boat == ""] <- "NA"
+
+```
+
+4. Cabin: Many passengers don't have passengers don't have cabin number associated with them. 
+
+For further analysis we should fill the missing vlaues with a binary dummy values. 
+
+```{r}
+titanic_data$cabin[titanic_data$cabin == ""] <- "NA"
+
+cabin_has_number <- ifelse(titanic_data$cabin == "NA", 0, 1)
+
+titanic_data$cabin_has_number <- cabin_has_number
+```
+
+5. Write clean csv file: write new csv with the cleaned up data and save it as titanic_clean.csv
+
+```{r}
+# view clean data
+
+view(titanic_data)
+
+write.table(titanic_data, "titanic_clean.csv", sep = ",")
+```
+
 
